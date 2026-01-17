@@ -167,10 +167,21 @@ SERVER_SQLITE='{
 }'
 
 # Playwright (NPM - Verified)
-SERVER_PLAYWRIGHT='{
-    "command": "'$NPX_WRAPPER'",
-    "args": ["-y", "@playwright/mcp"]
-}'
+SERVER_PLAYWRIGHT=$(cat <<EOF
+{
+  "command": "$NPX_WRAPPER",
+  "args": ["-y", "@playwright/mcp"]
+}
+EOF
+)
+
+SERVER_PLAYWRIGHT_TEST=$(cat <<EOF
+{
+  "command": "npx",
+  "args": ["-y", "@executeautomation/playwright-mcp-server"]
+}
+EOF
+)
 
 # Context7 (Docs & Libraries - Highly Recommended by User)
 SERVER_CONTEXT7='{
@@ -180,6 +191,7 @@ SERVER_CONTEXT7='{
 
 
 # 5. Injection Logic
+# Note: Script will skip targets if directory doesn't exist
 TARGETS=(
     "$HOME/.gemini/antigravity/mcp_config.json|Antigravity Agent"
     "$HOME/.copilot/mcp-config.json|GitHub Copilot"
@@ -187,6 +199,7 @@ TARGETS=(
     "$HOME/Library/Application Support/Claude/claude_desktop_config.json|Claude Desktop"
     "$HOME/Library/Application Support/Cursor/User/globalStorage/mcp.json|Cursor Editor"
     "$HOME/.codeium/windsurf/mcp_config.json|Windsurf Editor"
+    "$HOME/.opencode/mcp_config.json|OpenCode"
 )
 
 inject_config() {
@@ -214,11 +227,20 @@ inject_config() {
     "$JQ" 'del(.mcpServers.git, .mcpServers.filesystem)' "$file" > "$tmp_file" && "$MV" "$tmp_file" "$file"
 
     # Inject Servers
-    for srv_key in "fetch=$SERVER_FETCH" "time=$SERVER_TIME" "sequential-thinking=$SERVER_SEQUENTIAL" "memory=$SERVER_MEMORY" "sqlite=$SERVER_SQLITE" "playwright=$SERVER_PLAYWRIGHT" "context7=$SERVER_CONTEXT7"; do
+    for srv_key in "fetch=$SERVER_FETCH" "time=$SERVER_TIME" "sequential-thinking=$SERVER_SEQUENTIAL" "memory=$SERVER_MEMORY" "sqlite=$SERVER_SQLITE" "playwright=$SERVER_PLAYWRIGHT" "playwright-test=$SERVER_PLAYWRIGHT_TEST" "context7=$SERVER_CONTEXT7"; do
         key="${srv_key%%=*}"
         json="${srv_key#*=}"
         
-        "$JQ" --argjson val "$json" ".mcpServers[\"$key\"] = \$val" "$file" > "$tmp_file" && "$MV" "$tmp_file" "$file"
+        # GitHub Copilot CLI requires 'tools' field, Gemini CLI does not
+        if [[ "$file" == *"copilot"* ]]; then
+            "$JQ" --arg name "$key" --argjson config "$json" \
+            '.mcpServers[$name] = ($config + {"tools": ["*"]})' \
+            "$file" > "$tmp_file" && "$MV" "$tmp_file" "$file"
+        else
+            "$JQ" --arg name "$key" --argjson config "$json" \
+            '.mcpServers[$name] = $config' \
+            "$file" > "$tmp_file" && "$MV" "$tmp_file" "$file"
+        fi
         echo -n "$key "
     done
     

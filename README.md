@@ -99,8 +99,25 @@ agent/
 
 > [!TIP]
 > **이미 모든 설정이 완료되었습니다.** 
-> `./install.sh`를 실행하면 위 7개 서버가 자동으로 연결됩니다.
-> (설정 파일: `~/.gemini/antigravity/mcp_config.json`, `~/.gemini/settings.json`)
+> `./install.sh`를 실행하면 위 8개 서버가 자동으로 연결됩니다.
+> (설정 파일: `~/.gemini/antigravity/mcp_config.json`, `~/.copilot/mcp-config.json`, 기타)
+
+### 지원하는 AI 도구
+
+`setup_mcp.sh`는 다음 AI 도구에 MCP 서버를 자동으로 설정합니다:
+
+| 도구 | 설정 파일 | 상태 |
+|:---|:---|:---|
+| **Gemini CLI** (Antigravity) | `~/.gemini/antigravity/mcp_config.json` | ✅ 완전 지원 |
+| **GitHub Copilot CLI** | `~/.copilot/mcp-config.json` | ✅ 완전 지원 |
+| **Gemini Code Assist** | `~/.gemini/settings.json` | ✅ 완전 지원 |
+| **Claude Desktop** | `~/Library/Application Support/Claude/claude_desktop_config.json` | ✅ 완전 지원 |
+| **Cursor** | `~/Library/Application Support/Cursor/User/globalStorage/mcp.json` | ✅ 완전 지원 |
+| **Windsurf** | `~/.codeium/windsurf/mcp_config.json` | ✅ 완전 지원 |
+| **OpenCode** | `~/.opencode/mcp_config.json` | ⚠️ 실험적 지원 |
+
+> [!NOTE]
+> 스크립트는 설치되지 않은 도구를 자동으로 건너뜁니다. 원하는 도구만 설치하면 됩니다.
 
 ---
 
@@ -120,12 +137,12 @@ agent/
 
 ### 6.1 사전 준비 (Prerequisites)
 이 프로젝트는 최신 에이전트 경험을 위해 Modern Unix 도구들을 사용합니다.
-`setup.sh` 스크립트를 실행하여 필수 도구(`gh`, `fd`, `rg`, `bat`, `eza` 등)를 확인하고 자동으로 설치하세요.
+`scripts/setup.sh` 스크립트를 실행하여 필수 도구(`gh`, `fd`, `rg`, `bat`, `eza` 등)를 확인하고 자동으로 설치하세요.
 
 ```bash
 # 1. 설치 스크립트 실행 (의존성 검사 및 설치)
-chmod +x setup.sh
-./setup.sh
+chmod +x scripts/setup.sh
+./scripts/setup.sh
 
 # 2. GitHub 로그인 (필수)
 # 로그인이 되어 있지 않다면 아래 명령어로 인증을 진행하세요.
@@ -143,7 +160,7 @@ cp .env.example .env
 vi .env # SCAN_PATH, GH_HOST 수정
 
 # 2. 아티팩트 빌드 (모든 모드 생성)
-./sync_agent.sh
+./scripts/sync_agent.sh
 ```
 
 ### 4.2 모드 전환 (Smart Context)
@@ -208,10 +225,11 @@ Vibe Skills는 **"Smart Context"** 시스템을 통해 작업 성격에 따라 �
 ## ⚠️ 주의사항
 
 ### 🔴 절대 수정 금지
-- `master_agent.md` - 자동 생성 파일. `.gitignore`에 포함됨. 수정해도 다음 동기화 시 덮어씌워짐.
+- `build/master_*.md` - 자동 생성 파일. 수정해도 다음 동기화 시 덮어씌워짐.
+- `.cursorrules`, `.clinerules`, `.windsurfrules` - 심볼릭 링크 파일.
 
 ### 🟡 수정 시 동기화 필요
-- `instructions/*.md` 또는 `skills/*.md` 수정 후 반드시 `./sync_agent.sh` 실행
+- `instructions/*.md` 또는 `core/*.md` 수정 후 반드시 `./scripts/sync_agent.sh` 실행
 
 ---
 
@@ -221,37 +239,51 @@ Vibe Skills는 **"Smart Context"** 시스템을 통해 작업 성격에 따라 �
 | 범위 | 디렉토리 | 역할 |
 |:---:|:---|:---|
 | `00-09` | `instructions/` | 행동 원칙 | 헌법, 페르소나, 워크플로우 |
-| `10-19` | `skills/` | 기술 명세 | 도구, 메모리, 부트스트랩 |
+| `10-19` | `core/` | 기술 명세 | 도구, 메모리, 부트스트랩 |
 
 ---
 
 ## 🔗 연결 위치
 
-| 대상 | 경로 | 용도 |
+### 글로벌 지침 (Global Instructions)
+
+각 AI 도구는 다음 위치에서 글로벌 지침을 읽습니다:
+
+| AI 도구 | 글로벌 지침 경로 | 비고 |
 |:---:|:---|:---|
-| **Gemini CLI** | `~/.gemini/GEMINI.md` | 터미널 AI 에이전트 |
-| **GitHub Copilot** | `{project}/.github/copilot-instructions.md` | VS Code AI 어시스턴트 |
+| **Gemini CLI** (Antigravity) | `~/.gemini/GEMINI.md` | 터미널 AI 에이전트 |
+| **OpenCode** | `~/.config/opencode/AGENTS.md` | 오픈소스 AI 코딩 도구 |
+
+### 프로젝트별 지침 (Project Instructions)
+
+각 프로젝트의 루트에 다음 파일들이 자동으로 생성됩니다:
+
+| 파일 | 대상 AI 도구 | 비고 |
+|:---|:---|:---|
+| `.github/copilot-instructions.md` | GitHub Copilot | VS Code 통합 |
+| `.cursorrules` | Cursor Editor | AI 코드 에디터 |
+| `.clinerules` | Cline | VS Code 확장 |
+| `.windsurfrules` | Windsurf | Codeium 에디터 |
+| `.opencode/AGENTS.md` | OpenCode | 프로젝트 설정 |
+
+> [!NOTE]
+> 위 파일들은 모두 `build/master_dynamic.md`를 가리키는 **심볼릭 링크**입니다.
+> `sync_agent.sh` 실행 시 자동으로 생성되고 `.gitignore`에 추가됩니다.
 
 ---
 
 ## 📊 현재 상태
 | 항목 | 값 |
-|:---|:---|
-| 지침 파일 수 | 9개 (6 instructions + 3 skills) |
-| 연결된 프로젝트 수 | - |
-| 마지막 업데이트 | 2026-01-15 |
+|:---|:---:|
+| **지침 파일 수** | 10개 (4 instructions + 3 core) |
+| **모드** | 5개 (dev, plan, review, test, doc) |
+| **MCP 서버** | 8개 (Context7, Memory, SQLite, Playwright 등) |
+| **지원 AI 도구** | 7개 (Gemini, Copilot, OpenCode, Claude, Cursor, Windsurf, Code Assist) |
+| **마지막 업데이트** | 2026-01-17 |
 
 ---
 
-## 🔮 향후 계획
-- [ ] 프로젝트별 오버라이드 지침 지원 (`.agent_override.md`)
-- [ ] 지침 버전 관리 (Git 태그 연동)
-- [ ] 지침 효과 측정 대시보드
-- [ ] 자동 린트 (지침 품질 검사)
-
----
-
-## 📚 참고 자료
+##  참고 자료
 - [Brex Prompt Engineering Guide](https://github.com/brexhq/prompt-engineering)
 - [Anthropic Claude Prompt Design](https://docs.anthropic.com/claude/docs/prompt-design)
 - [OpenAI Best Practices](https://platform.openai.com/docs/guides/prompt-engineering)

@@ -217,6 +217,7 @@ update_project_link() {
         ".cursorrules"
         ".clinerules"
         ".windsurfrules"
+        ".opencode/AGENTS.md"
     )
     
     for rel_path in "${targets[@]}"; do
@@ -231,6 +232,10 @@ update_project_link() {
 # 6.1 ~/.gemini/GEMINI.md 업데이트
 update_symlink "$HOME/.gemini/GEMINI.md" "$SOURCE_FILE"
 echo -e "✅ Global Agent Updated: ${YELLOW}~/.gemini/GEMINI.md${NC}"
+
+# 6.1.1 OpenCode global instructions
+update_symlink "$HOME/.config/opencode/AGENTS.md" "$SOURCE_FILE"
+echo -e "✅ OpenCode Agent Updated: ${YELLOW}~/.config/opencode/AGENTS.md${NC}"
 
 # 6.2 Git 프로젝트 스캔 및 업데이트
 if [[ -d "$SCAN_PATH" ]]; then
