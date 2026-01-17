@@ -1,0 +1,13 @@
+.env
+.DS_Store
+source/
+build/
+links.map
+
+.github/copilot-instructions.md
+
+.cursorrules
+
+.clinerules
+
+.windsurfrules
