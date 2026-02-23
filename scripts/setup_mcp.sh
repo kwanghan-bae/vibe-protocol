@@ -214,6 +214,9 @@ inject_config() {
         # 루트 'mcp' 객체가 존재하는지 확인
         "$JQ" '.mcp = (.mcp // {})' "$file" > "$tmp_file" && "$MV" "$tmp_file" "$file"
         
+        # 중복/구버전 서버 제거 (Tool 개수 제한 128개 초과 방지)
+        "$JQ" 'del(.mcp["playwright-test-automation"])' "$file" > "$tmp_file" && "$MV" "$tmp_file" "$file"
+
         # 포맷 변환과 함께 서버 주입
         for srv_key in "fetch=$SERVER_FETCH" "time=$SERVER_TIME" "sequential-thinking=$SERVER_SEQUENTIAL" "memory=$SERVER_MEMORY" "sqlite=$SERVER_SQLITE" "playwright=$SERVER_PLAYWRIGHT" "playwright-test=$SERVER_PLAYWRIGHT_TEST" "context7=$SERVER_CONTEXT7"; do
             key="${srv_key%%=*}"

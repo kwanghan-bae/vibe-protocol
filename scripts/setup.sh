@@ -1,9 +1,9 @@
 #!/bin/zsh
 
 # ==============================================================================
-# 🛠️ Vibe Skills - Environment Setup Script (Bootstrap)
+# 🛠️ Vibe Protocol - Environment Setup Script (Bootstrap)
 # ==============================================================================
-# 이 스크립트는 Vibe Skills 에이전트 구동에 필요한 필수 도구들을 점검하고 설치합니다.
+# 이 스크립트는 Vibe Protocol 에이전트 구동에 필요한 필수 도구들을 점검하고 설치합니다.
 #
 # [점검 항목]
 # 1. 패키지 매니저: Homebrew (macOS)
@@ -22,7 +22,7 @@ NC='\033[0m'
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 AGENT_ROOT="$(dirname "$SCRIPT_DIR")"
 
-echo -e "${BLUE}=== 🛠️  Vibe Skills Environment Setup ===${NC}\n"
+echo -e "${BLUE}=== 🛠️  Vibe Protocol Environment Setup ===${NC}\n"
 
 # ------------------------------------------------------------------------------
 # 1. Homebrew 점검 (macOS)

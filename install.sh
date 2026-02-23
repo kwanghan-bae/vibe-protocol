@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # ==============================================================================
-# 🚀 Vibe Skills - Unified Installer (One-Shot Setup)
+# 🚀 Vibe Protocol - Unified Installer (One-Shot Setup)
 # ==============================================================================
 # 이 스크립트는 다음 단계를 순차적으로 실행하여 환경을 완벽하게 구성합니다.
 # 1. 환경 변수 설정 (.env)
@@ -18,7 +18,7 @@ YELLOW='\033[1;33m'
 RED='\033[0;31m'
 NC='\033[0m'
 
-echo -e "${BLUE}=== 🚀 Vibe Skills All-in-One Installer ===${NC}\n"
+echo -e "${BLUE}=== 🚀 Vibe Protocol All-in-One Installer ===${NC}\n"
 
 # 0. Root 실행 방지 (Homebrew 등 문제 방지)
 if [ "$EUID" -eq 0 ]; then

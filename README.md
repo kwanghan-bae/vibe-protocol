@@ -199,7 +199,7 @@ vi .env # SCAN_PATH, GH_HOST 수정
 ```
 
 ### 4.2 모드 전환 (Smart Context)
-Vibe Skills는 **"Smart Context"** 시스템을 통해 작업 성격에 따라 필요한 기술을 동적으로 불러옵니다.
+Vibe Protocol은 **"Smart Context"** 시스템을 통해 작업 성격에 따라 필요한 기술을 동적으로 불러옵니다.
 사용자가 별도로 모드를 전환할 필요가 없습니다. 에이전트가 `capability_map.md`를 참조하여 스스로 판단합니다.
 
 #### ⚡ 쾌속 전환 (Cheat Sheet)

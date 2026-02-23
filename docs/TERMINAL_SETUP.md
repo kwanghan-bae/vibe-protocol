@@ -144,7 +144,7 @@ lazygit
 ### 디렉토리 이동
 ```bash
 # 자주 가는 곳은 zoxide가 기억
-z vibe      # ~/Desktop/git/vibe-skills로 점프
+z vibe      # ~/Desktop/git/vibe-protocol로 점프
 z user      # ~/Users/username으로 점프
 
 # 처음 가는 곳은 cd 사용

@@ -8,12 +8,12 @@
 
 ### AI에게 이렇게 말하세요:
 
-> "https://github.com/kwanghan-bae/vibe-skills 이 프로젝트를 설치해줘. 아래 명령어를 그대로 실행해."
+> "https://github.com/kwanghan-bae/vibe-protocol 이 프로젝트를 설치해줘. 아래 명령어를 그대로 실행해."
 
 ```bash
 # 한방에 설치 (원라이너)
-git clone https://github.com/kwanghan-bae/vibe-skills.git ~/vibe-skills && \
-cd ~/vibe-skills && \
+git clone https://github.com/kwanghan-bae/vibe-protocol.git ~/vibe-protocol && \
+cd ~/vibe-protocol && \
 chmod +x install.sh && \
 ./install.sh
 ```
@@ -74,12 +74,12 @@ brew install gh
 
 ### MCP 서버 재설정
 ```bash
-cd ~/vibe-skills && ./scripts/setup_mcp.sh
+cd ~/vibe-protocol && ./scripts/setup_mcp.sh
 ```
 
 ### 프로젝트별 지침 재생성
 ```bash
-cd ~/vibe-skills && ./scripts/sync_agent.sh
+cd ~/vibe-protocol && ./scripts/sync_agent.sh
 ```
 
 ---
